@@ -98,7 +98,9 @@ JOIN genre g ON g.genre_id = t.genre_id
 JOIN most_popular_genre mpg ON g.name = mpg.genre_name
 GROUP BY c.country, genre_name
 
---11. Write a query that determines the customer that has spent the most on music for each country. Write a query that returns the country along with the top customer and how much they spent. For countries where the top amount spent is shared, provide all customers who spent this amount.WITH Customer_with_country AS (
+--11. Write a query that determines the customer that has spent the most on music for each country. Write a query that returns the country along with the top customer and how much they spent. For countries where the top amount spent is shared, provide all customers who spent this amount.
+
+WITH Customer_with_country AS (
     SELECT c.customer_id, c.first_name, c.last_name, i.billing_country, SUM(i.total) AS total_spending,
     ROW_NUMBER() OVER(PARTITION BY i.billing_country ORDER BY SUM(i.total) DESC) AS RowNo 
     FROM invoice i
@@ -107,5 +109,3 @@ GROUP BY c.country, genre_name
 SELECT *
 FROM Customer_with_country 
 WHERE RowNo <= 1
-
-
